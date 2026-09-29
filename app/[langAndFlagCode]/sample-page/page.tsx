@@ -1,7 +1,9 @@
 import { getPrecomputed } from "flags/next"
 import type { Metadata } from "next"
 import { langAndFlagCode } from "next/root-params"
+import { connection } from "next/server"
 import { getTranslations } from "next-intl/server"
+import { Suspense } from "react"
 
 import { precomputeFlags, showSampleMessage } from "@/flags"
 import { SampleNavigation } from "./sample-navigation"
@@ -11,14 +13,27 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: t("title"), description: t("description") }
 }
 
+async function getSampleFlag(flagCode: string) {
+  "use cache"
+  return getPrecomputed(showSampleMessage, precomputeFlags, flagCode)
+}
+
+async function ResponseTime() {
+  await connection()
+  const now = new Date()
+  return (
+    <dd>
+      <time dateTime={now.toISOString()}>{now.toUTCString()}</time>
+    </dd>
+  )
+}
+
 export default async function SamplePage() {
   const token = await langAndFlagCode()
-  const [locale, flagCode] = token.split("-")
-  const enabled = await getPrecomputed(
-    showSampleMessage,
-    precomputeFlags,
-    flagCode
-  )
+  const separator = token.indexOf("-")
+  const locale = token.slice(0, separator)
+  const flagCode = token.slice(separator + 1)
+  const enabled = await getSampleFlag(flagCode)
   const t = await getTranslations("Sample")
 
   return (
@@ -32,6 +47,10 @@ export default async function SamplePage() {
         <dd className="font-mono">{flagCode}</dd>
         <dt>Sample flag</dt>
         <dd>{enabled ? t("enabled") : t("disabled")}</dd>
+        <dt>Response time</dt>
+        <Suspense fallback={<dd>...</dd>}>
+          <ResponseTime />
+        </Suspense>
       </dl>
       <SampleNavigation label={t("back")} />
     </main>

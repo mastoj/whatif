@@ -5,8 +5,9 @@ This is a Next.js template with shadcn/ui.
 ## Local development
 
 Generate a signing secret (`openssl rand -base64 32`) and set `FLAGS_SECRET` in
-`.env.local` before starting the app. Use the same secret in every deployed
-instance; the Flags SDK needs it to encode and decode precomputed flag codes.
+`.env.local` before building or starting the app. Use the same secret in every
+deployed instance; the Flags SDK needs it to encode and decode precomputed flag
+codes, including the variants generated at build time.
 
 The public URLs are `/` and `/sample-page`. The proxy rewrites them internally
 to `/<lang>-<flagCode>/...`; links and `router.push` should use public URLs.

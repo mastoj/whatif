@@ -1,4 +1,5 @@
 import { Inter, Geist_Mono } from "next/font/google"
+import { generatePermutations } from "flags/next"
 import { notFound } from "next/navigation"
 import { langAndFlagCode } from "next/root-params"
 import { NextIntlClientProvider } from "next-intl"
@@ -6,10 +7,18 @@ import { getMessages } from "next-intl/server"
 
 import "../globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
+import { precomputeFlags } from "@/flags"
 import { cn } from "@/lib/utils"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" })
 const fontMono = Geist_Mono({ subsets: ["latin"], variable: "--font-mono" })
+
+export async function generateStaticParams() {
+  const flagCodes = await generatePermutations(precomputeFlags)
+  return ["en", "de"].flatMap((locale) =>
+    flagCodes.map((flagCode) => ({ langAndFlagCode: `${locale}-${flagCode}` }))
+  )
+}
 
 export default async function RootLayout({
   children,
