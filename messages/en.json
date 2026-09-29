@@ -1,0 +1,14 @@
+{
+  "Home": {
+    "title": "Project ready!",
+    "description": "You may now add components and start building.",
+    "sampleLink": "Sample page"
+  },
+  "Sample": {
+    "title": "Sample page",
+    "description": "The locale and flag code come from the root route parameter.",
+    "back": "Back home",
+    "enabled": "Enabled",
+    "disabled": "Disabled"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "Home": {
+    "title": "Projekt bereit!",
+    "description": "Du kannst jetzt Komponenten hinzufugen und loslegen.",
+    "sampleLink": "Beispielseite"
+  },
+  "Sample": {
+    "title": "Beispielseite",
+    "description": "Sprache und Flag-Code stammen aus dem Root-Routenparameter.",
+    "back": "Zur Startseite",
+    "enabled": "Aktiviert",
+    "disabled": "Deaktiviert"
+  }
+}
