@@ -30,8 +30,9 @@ async function getPromoFlag(flagCode: string) {
   return getPrecomputed(showPromoBanner, precomputeFlags, flagCode)
 }
 
+// Cache Components needs one value; this placeholder 404s and every real SKU renders on first visit
 export function generateStaticParams() {
-  return products.map((p) => ({ sku: p.sku }))
+  return [{ sku: "__placeholder__" }]
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

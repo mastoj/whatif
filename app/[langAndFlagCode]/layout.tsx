@@ -1,5 +1,5 @@
 import { Inter, Geist_Mono } from "next/font/google"
-import { generatePermutations } from "flags/next"
+import { serialize } from "flags/next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { langAndFlagCode } from "next/root-params"
@@ -10,17 +10,19 @@ import "../globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { LocaleSwitcher } from "@/components/locale-switcher"
 import { precomputeFlags } from "@/flags"
-import { isLocale, locales } from "@/i18n/locales"
+import { defaultLocale, isLocale } from "@/i18n/locales"
 import { cn } from "@/lib/utils"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" })
 const fontMono = Geist_Mono({ subsets: ["latin"], variable: "--font-mono" })
 
+// Cache Components needs one value; every other locale/flag combination is rendered on first visit and cached
 export async function generateStaticParams() {
-  const flagCodes = await generatePermutations(precomputeFlags)
-  return locales.flatMap((locale) =>
-    flagCodes.map((flagCode) => ({ langAndFlagCode: `${locale}-${flagCode}` }))
+  const flagCode = await serialize(
+    precomputeFlags,
+    precomputeFlags.map(() => false)
   )
+  return [{ langAndFlagCode: `${defaultLocale}-${flagCode}` }]
 }
 
 export default async function RootLayout({
