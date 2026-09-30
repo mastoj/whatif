@@ -1,0 +1,32 @@
+{
+  "Home": {
+    "title": "Prosjektet er klart!",
+    "description": "Nå kan du legge til komponenter og begynne å bygge.",
+    "sampleLink": "Eksempelside",
+    "productsLink": "Alle produkter",
+    "featured": "Utvalgte produkter"
+  },
+  "Sample": {
+    "title": "Eksempelside",
+    "description": "Språk og flaggkode kommer fra rotens ruteparameter.",
+    "back": "Til forsiden",
+    "enabled": "Aktivert",
+    "disabled": "Deaktivert"
+  },
+  "Product": {
+    "home": "Hjem",
+    "allProducts": "Alle produkter",
+    "reviews": "{count, plural, one {# anmeldelse} other {# anmeldelser}}",
+    "save": "Spar {percent} %",
+    "color": "Farge",
+    "size": "Størrelse",
+    "inStock": "På lager – sendes innen 1–2 virkedager",
+    "lowStock": "Kun {count} igjen på lager",
+    "addToCart": "Legg i handlekurven",
+    "highlights": "Høydepunkter",
+    "specifications": "Spesifikasjoner",
+    "recommendations": "Du vil kanskje også like",
+    "promoBanner": "Gratis frakt på alle bestillinger denne uken!",
+    "deliveryEstimate": "Bestill innen {hours} t {minutes} min for sending neste dag"
+  }
+}

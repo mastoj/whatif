@@ -13,10 +13,11 @@ For Vercel deployments, add `FLAGS_SECRET` in the project's Settings >
 Environment Variables for Production and Preview (if used), then redeploy. Keep
 the same value for builds and runtime; `.env.local` is only for local development.
 
-The public URLs are `/` and `/sample-page`. The proxy rewrites them internally
-to `/<lang>-<flagCode>/...`; links and `router.push` should use public URLs.
-For this example, `NEXT_LOCALE=de` selects German, or the `Accept-Language`
-header selects it when no locale cookie is set. English is the default.
+The public URLs are `/`, `/sample-page`, `/product` and `/product/<sku>`. The
+proxy rewrites them internally to `/<lang>-<flagCode>/...`; links and
+`router.push` should use public URLs. Supported locales are `en`, `sv` and `no`
+(see `i18n/locales.ts`). The proxy picks the `NEXT_LOCALE` cookie (set by the
+language switcher), then `Accept-Language`, then English.
 
 ## Adding components
 
