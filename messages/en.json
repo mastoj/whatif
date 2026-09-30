@@ -10,5 +10,20 @@
     "back": "Back home",
     "enabled": "Enabled",
     "disabled": "Disabled"
+  },
+  "Product": {
+    "home": "Home",
+    "reviews": "{count, plural, one {# review} other {# reviews}}",
+    "save": "Save {percent}%",
+    "color": "Color",
+    "size": "Size",
+    "inStock": "In stock – ships within 1-2 business days",
+    "lowStock": "Only {count} left in stock",
+    "addToCart": "Add to cart",
+    "highlights": "Highlights",
+    "specifications": "Specifications",
+    "recommendations": "You might also like",
+    "promoBanner": "Free shipping on all orders this week!",
+    "deliveryEstimate": "Order within {hours} h {minutes} min for next-day dispatch"
   }
 }

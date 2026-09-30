@@ -5,4 +5,18 @@ export const showSampleMessage = flag({
   decide: () => true,
 })
 
-export const precomputeFlags = [showSampleMessage] as const
+// Toggled via cookies set by the FlagToggles component on the product page
+export const showPromoBanner = flag<boolean>({
+  key: "show-promo-banner",
+  options: [false, true],
+  decide: ({ cookies }) => cookies.get("show-promo-banner")?.value === "1",
+})
+
+export const showDeliveryEstimate = flag<boolean>({
+  key: "show-delivery-estimate",
+  options: [false, true],
+  decide: ({ cookies }) =>
+    cookies.get("show-delivery-estimate")?.value === "1",
+})
+
+export const precomputeFlags = [showSampleMessage, showPromoBanner] as const

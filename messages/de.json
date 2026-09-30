@@ -10,5 +10,20 @@
     "back": "Zur Startseite",
     "enabled": "Aktiviert",
     "disabled": "Deaktiviert"
+  },
+  "Product": {
+    "home": "Startseite",
+    "reviews": "{count, plural, one {# Bewertung} other {# Bewertungen}}",
+    "save": "{percent}% sparen",
+    "color": "Farbe",
+    "size": "Größe",
+    "inStock": "Auf Lager – Versand in 1-2 Werktagen",
+    "lowStock": "Nur noch {count} auf Lager",
+    "addToCart": "In den Warenkorb",
+    "highlights": "Highlights",
+    "specifications": "Technische Daten",
+    "recommendations": "Das könnte dir auch gefallen",
+    "promoBanner": "Diese Woche kostenloser Versand auf alle Bestellungen!",
+    "deliveryEstimate": "Bestelle innerhalb von {hours} Std. {minutes} Min. für Versand am nächsten Tag"
   }
 }
