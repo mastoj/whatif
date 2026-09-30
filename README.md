@@ -9,6 +9,10 @@ Generate a signing secret (`openssl rand -base64 32`) and set `FLAGS_SECRET` in
 deployed instance; the Flags SDK needs it to encode and decode precomputed flag
 codes, including the variants generated at build time.
 
+For Vercel deployments, add `FLAGS_SECRET` in the project's Settings >
+Environment Variables for Production and Preview (if used), then redeploy. Keep
+the same value for builds and runtime; `.env.local` is only for local development.
+
 The public URLs are `/` and `/sample-page`. The proxy rewrites them internally
 to `/<lang>-<flagCode>/...`; links and `router.push` should use public URLs.
 For this example, `NEXT_LOCALE=de` selects German, or the `Accept-Language`
