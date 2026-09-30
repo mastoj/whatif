@@ -7,6 +7,7 @@ import { connection } from "next/server"
 import { getFormatter, getTranslations } from "next-intl/server"
 import { Suspense } from "react"
 
+import { ProductCard } from "@/components/product-card"
 import { Button } from "@/components/ui/button"
 import { precomputeFlags, showDeliveryEstimate, showPromoBanner } from "@/flags"
 import { getProduct, products, type Product } from "@/lib/products"
@@ -83,6 +84,10 @@ async function ProductDetails({ params }: Pick<Props, "params">) {
       <nav className="text-muted-foreground">
         <Link href="/" className="hover:underline">
           {t("home")}
+        </Link>{" "}
+        /{" "}
+        <Link href="/product" className="hover:underline">
+          {t("allProducts")}
         </Link>{" "}
         / {product.category} /{" "}
         <span className="text-foreground">{product.name}</span>
@@ -189,24 +194,13 @@ async function Recommendations({ params }: Pick<Props, "params">) {
     .sort((a, b) => a.r - b.r)
     .slice(0, 3)
     .map(({ p }) => p)
-  const format = await getFormatter({ locale: await getLocale() })
+  const locale = await getLocale()
 
   return (
     <ul className="grid gap-4 sm:grid-cols-3">
       {picks.map((p) => (
         <li key={p.sku}>
-          <Link
-            href={`/product/${p.sku}`}
-            className="flex flex-col gap-1 rounded-lg border p-4 hover:bg-muted"
-          >
-            <span className="text-xs text-muted-foreground uppercase">
-              {p.brand}
-            </span>
-            <span className="font-medium">{p.name}</span>
-            <span>
-              {format.number(p.price, { style: "currency", currency: "EUR" })}
-            </span>
-          </Link>
+          <ProductCard product={p} locale={locale} className="h-full" />
         </li>
       ))}
     </ul>

@@ -2,7 +2,9 @@
   "Home": {
     "title": "Project ready!",
     "description": "You may now add components and start building.",
-    "sampleLink": "Sample page"
+    "sampleLink": "Sample page",
+    "productsLink": "All products",
+    "featured": "Featured products"
   },
   "Sample": {
     "title": "Sample page",
@@ -13,6 +15,7 @@
   },
   "Product": {
     "home": "Home",
+    "allProducts": "All products",
     "reviews": "{count, plural, one {# review} other {# reviews}}",
     "save": "Save {percent}%",
     "color": "Color",

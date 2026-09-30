@@ -2,7 +2,9 @@
   "Home": {
     "title": "Projekt bereit!",
     "description": "Du kannst jetzt Komponenten hinzufugen und loslegen.",
-    "sampleLink": "Beispielseite"
+    "sampleLink": "Beispielseite",
+    "productsLink": "Alle Produkte",
+    "featured": "Ausgewählte Produkte"
   },
   "Sample": {
     "title": "Beispielseite",
@@ -13,6 +15,7 @@
   },
   "Product": {
     "home": "Startseite",
+    "allProducts": "Alle Produkte",
     "reviews": "{count, plural, one {# Bewertung} other {# Bewertungen}}",
     "save": "{percent}% sparen",
     "color": "Farbe",
