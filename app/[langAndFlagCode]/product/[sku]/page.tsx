@@ -1,4 +1,5 @@
 import { getPrecomputed } from "flags/next"
+import { cacheLife } from "next/cache"
 import type { Metadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
@@ -30,9 +31,16 @@ async function getPromoFlag(flagCode: string) {
   return getPrecomputed(showPromoBanner, precomputeFlags, flagCode)
 }
 
-// Cache Components needs one value; this placeholder 404s and every real SKU renders on first visit
+async function getProductWithLatency(sku: string) {
+  "use cache"
+  cacheLife("max")
+  await new Promise((resolve) => setTimeout(resolve, 1500))
+  return getProduct(sku)
+}
+
+// Cache Components needs one valid value; remaining SKUs render on first visit
 export function generateStaticParams() {
-  return [{ sku: "__placeholder__" }]
+  return products.slice(0, 1).map(({ sku }) => ({ sku }))
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -46,6 +54,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 async function Price({ product }: { product: Product }) {
+  "use cache"
+  cacheLife("max")
+  // Simulate a slow pricing service only when this cache entry is cold.
+  await new Promise((resolve) => setTimeout(resolve, 10_000))
   const locale = await getLocale()
   const format = await getFormatter({ locale })
   const t = await getTranslations({ locale, namespace: "Product" })
@@ -75,7 +87,7 @@ async function Price({ product }: { product: Product }) {
 
 async function ProductDetails({ params }: Pick<Props, "params">) {
   const { sku } = await params
-  const product = getProduct(sku)
+  const product = await getProductWithLatency(sku)
   if (!product) notFound()
   const locale = await getLocale()
   const t = await getTranslations({ locale, namespace: "Product" })
@@ -115,7 +127,17 @@ async function ProductDetails({ params }: Pick<Props, "params">) {
             </p>
           </div>
 
-          <Price product={product} />
+          <Suspense
+            fallback={
+              <div
+                role="status"
+                aria-label={t("loadingPrice")}
+                className="h-8 w-40 animate-pulse rounded bg-muted"
+              />
+            }
+          >
+            <Price product={product} />
+          </Suspense>
 
           <p>{product.description}</p>
 

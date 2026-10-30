@@ -19,6 +19,24 @@ proxy rewrites them internally to `/<lang>-<flagCode>/...`; links and
 (see `i18n/locales.ts`). The proxy picks the `NEXT_LOCALE` cookie (set by the
 language switcher), then `Accept-Language`, then English.
 
+## Price streaming demo
+
+Product prices simulate a 10-second pricing service, cached with `cacheLife("max")`.
+On a cold visit, a price skeleton appears while the price streams in. Later visits
+to the same URL include the price in the cached shell. The existing product lookup
+adds another 1.5 seconds on a cold cache; recommendations remain request-time content.
+
+`TRL-RUN-001` is prerendered at build time, so use `/product/JKT-SHL-002` to see a
+cold price. Test production caching with a fresh build and server using the same
+`FLAGS_SECRET`, before visiting that product:
+
+```bash
+BASE_URL=http://localhost:3000 node --test tests/price-cache.test.mjs
+```
+
+New builds, cache expiration, and eviction can make a price cold again. Development
+mode does not represent production shell caching.
+
 ## Adding components
 
 To add components to your app, run the following command:

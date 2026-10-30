@@ -23,6 +23,7 @@
     "inStock": "På lager – sendes innen 1–2 virkedager",
     "lowStock": "Kun {count} igjen på lager",
     "addToCart": "Legg i handlekurven",
+    "loadingPrice": "Laster pris",
     "highlights": "Høydepunkter",
     "specifications": "Spesifikasjoner",
     "recommendations": "Du vil kanskje også like",

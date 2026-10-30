@@ -23,6 +23,7 @@
     "inStock": "Auf Lager – Versand in 1-2 Werktagen",
     "lowStock": "Nur noch {count} auf Lager",
     "addToCart": "In den Warenkorb",
+    "loadingPrice": "Preis wird geladen",
     "highlights": "Highlights",
     "specifications": "Technische Daten",
     "recommendations": "Das könnte dir auch gefallen",

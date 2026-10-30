@@ -18,10 +18,8 @@ const fontMono = Geist_Mono({ subsets: ["latin"], variable: "--font-mono" })
 
 // Cache Components needs one value; every other locale/flag combination is rendered on first visit and cached
 export async function generateStaticParams() {
-  const flagCode = await serialize(
-    precomputeFlags,
-    precomputeFlags.map(() => false)
-  )
+  // Match runtime defaults: sample message on, promo banner off.
+  const flagCode = await serialize(precomputeFlags, [true, false])
   return [{ langAndFlagCode: `${defaultLocale}-${flagCode}` }]
 }
 

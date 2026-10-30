@@ -23,6 +23,7 @@
     "inStock": "I lager – skickas inom 1–2 arbetsdagar",
     "lowStock": "Endast {count} kvar i lager",
     "addToCart": "Lägg i varukorgen",
+    "loadingPrice": "Laddar pris",
     "highlights": "Höjdpunkter",
     "specifications": "Specifikationer",
     "recommendations": "Du kanske också gillar",

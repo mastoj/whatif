@@ -23,6 +23,7 @@
     "inStock": "In stock – ships within 1-2 business days",
     "lowStock": "Only {count} left in stock",
     "addToCart": "Add to cart",
+    "loadingPrice": "Loading price",
     "highlights": "Highlights",
     "specifications": "Specifications",
     "recommendations": "You might also like",
