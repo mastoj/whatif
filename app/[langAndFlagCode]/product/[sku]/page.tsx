@@ -1,5 +1,5 @@
 import { getPrecomputed } from "flags/next"
-import { cacheLife } from "next/cache"
+import { cacheLife, navigation } from "next/cache"
 import type { Metadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
@@ -38,6 +38,14 @@ async function getProductWithLatency(sku: string) {
   return getProduct(sku)
 }
 
+async function getPriceWithLatency(sku: string) {
+  "use cache"
+  cacheLife("max")
+  // Cache the simulated service by SKU, not by locale or feature-flag variant.
+  await new Promise((resolve) => setTimeout(resolve, 10_000))
+  return getProduct(sku)?.price
+}
+
 // Cache Components needs one valid value; remaining SKUs render on first visit
 export function generateStaticParams() {
   return products.slice(0, 1).map(({ sku }) => ({ sku }))
@@ -56,17 +64,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 async function Price({ product }: { product: Product }) {
   "use cache"
   cacheLife("max")
-  // Simulate a slow pricing service only when this cache entry is cold.
-  await new Promise((resolve) => setTimeout(resolve, 10_000))
-  const locale = await getLocale()
+  const [price, locale] = await Promise.all([
+    getPriceWithLatency(product.sku),
+    getLocale(),
+  ])
+  if (price === undefined) notFound()
   const format = await getFormatter({ locale })
   const t = await getTranslations({ locale, namespace: "Product" })
   const money = (value: number) =>
     format.number(value, { style: "currency", currency: "EUR" })
 
   return (
-    <div className="flex items-baseline gap-3">
-      <span className="text-2xl font-semibold">{money(product.price)}</span>
+    <div data-testid="product-price" className="flex items-baseline gap-3">
+      <span className="text-2xl font-semibold">{money(price)}</span>
       {product.compareAtPrice && (
         <>
           <s className="text-muted-foreground">
@@ -74,9 +84,7 @@ async function Price({ product }: { product: Product }) {
           </s>
           <span className="rounded bg-red-600 px-2 py-0.5 text-xs text-white">
             {t("save", {
-              percent: Math.round(
-                (1 - product.price / product.compareAtPrice) * 100
-              ),
+              percent: Math.round((1 - price / product.compareAtPrice) * 100),
             })}
           </span>
         </>
@@ -207,6 +215,7 @@ async function ProductDetails({ params }: Pick<Props, "params">) {
 }
 
 async function Recommendations({ params }: Pick<Props, "params">) {
+  await navigation()
   await connection()
   const { sku } = await params
   // Simulate a slow recommendation service
@@ -220,7 +229,7 @@ async function Recommendations({ params }: Pick<Props, "params">) {
   const locale = await getLocale()
 
   return (
-    <ul className="grid gap-4 sm:grid-cols-3">
+    <ul data-testid="recommendations" className="grid gap-4 sm:grid-cols-3">
       {picks.map((p) => (
         <li key={p.sku}>
           <ProductCard product={p} locale={locale} className="h-full" />
@@ -238,7 +247,10 @@ async function PromoBanner() {
     namespace: "Product",
   })
   return (
-    <div className="rounded-lg bg-primary px-4 py-2 text-center text-primary-foreground">
+    <div
+      data-testid="promo-banner"
+      className="rounded-lg bg-primary px-4 py-2 text-center text-primary-foreground"
+    >
       {t("promoBanner")}
     </div>
   )
@@ -246,6 +258,8 @@ async function PromoBanner() {
 
 // Evaluated per request, so it must stay inside a Suspense boundary
 async function DeliveryEstimate() {
+  await navigation()
+  await connection()
   if (!(await showDeliveryEstimate())) return null
   const t = await getTranslations({
     locale: await getLocale(),
@@ -267,6 +281,7 @@ async function DeliveryEstimate() {
 }
 
 async function Toggles() {
+  await navigation()
   const [promo, delivery] = await Promise.all([
     getPromoFlag(await getFlagCode()),
     showDeliveryEstimate(),

@@ -22,17 +22,32 @@ language switcher), then `Accept-Language`, then English.
 ## Price streaming demo
 
 Product prices simulate a 10-second pricing service, cached with `cacheLife("max")`.
-On a cold visit, a price skeleton appears while the price streams in. Later visits
-to the same URL include the price in the cached shell. The existing product lookup
-adds another 1.5 seconds on a cold cache; recommendations remain request-time content.
+On a cold visit, the static shell appears immediately, then product details and
+the price stream in. Later visits to that URL include those details and price in
+the cached shell. The existing product lookup adds another 1.5 seconds on a cold
+cache; recommendations and delivery estimates remain request-time content.
 
-`TRL-RUN-001` is prerendered at build time, so use `/product/JKT-SHL-002` to see a
-cold price. Test production caching with a fresh build and server using the same
-`FLAGS_SECRET`, before visiting that product:
+All supported locale/promo root variants are prerendered, allowing nested SKU
+shells to upgrade after a visit. Price lookup is cached by SKU, so switching
+locale or promo flags does not repeat the pricing delay. Product cards opt into
+URL-specific prefetching: visible cards can warm products before the click,
+while recommendations and other request-time work wait until navigation.
+
+`TRL-RUN-001` is prerendered at build time. To see a cold price, directly open
+`/product/JKT-SHL-002` after a fresh production build, before browsing the catalog
+(which can prefetch it). Use the same `FLAGS_SECRET` for build and runtime.
+
+Run the production regression tests:
 
 ```bash
-BASE_URL=http://localhost:3000 node --test tests/price-cache.test.mjs
+pnpm exec playwright install chromium
+pnpm test:e2e
 ```
+
+Playwright builds and runs two isolated servers: normal production for verifying
+shell upgrades, and a test-enabled build for `instant()` navigation checks.
+Next.js disables background shell upgrades when that testing API is exposed,
+so these checks cannot share one build. See `instant-nav.rig.md`.
 
 New builds, cache expiration, and eviction can make a price cold again. Development
 mode does not represent production shell caching.

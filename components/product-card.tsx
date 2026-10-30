@@ -18,6 +18,7 @@ export async function ProductCard({
   return (
     <Link
       href={`/product/${product.sku}`}
+      prefetch={true}
       className={cn(
         "flex flex-col gap-1 rounded-lg border p-4 hover:bg-muted",
         className

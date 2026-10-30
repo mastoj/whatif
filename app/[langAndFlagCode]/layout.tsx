@@ -10,17 +10,20 @@ import "../globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { LocaleSwitcher } from "@/components/locale-switcher"
 import { precomputeFlags } from "@/flags"
-import { defaultLocale, isLocale } from "@/i18n/locales"
+import { isLocale, locales } from "@/i18n/locales"
 import { cn } from "@/lib/utils"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" })
 const fontMono = Geist_Mono({ subsets: ["latin"], variable: "--font-mono" })
 
-// Cache Components needs one value; every other locale/flag combination is rendered on first visit and cached
+// Known root variants let Next.js upgrade the nested SKU shell after its first visit.
 export async function generateStaticParams() {
-  // Match runtime defaults: sample message on, promo banner off.
-  const flagCode = await serialize(precomputeFlags, [true, false])
-  return [{ langAndFlagCode: `${defaultLocale}-${flagCode}` }]
+  const flagCodes = await Promise.all(
+    [false, true].map((promo) => serialize(precomputeFlags, [true, promo]))
+  )
+  return locales.flatMap((locale) =>
+    flagCodes.map((flagCode) => ({ langAndFlagCode: `${locale}-${flagCode}` }))
+  )
 }
 
 export default async function RootLayout({
