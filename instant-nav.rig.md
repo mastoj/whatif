@@ -14,6 +14,8 @@
 - HTTP contracts: a cold hard load sends the fallback shell without waiting for
   price. A warm hard load includes price before `</main>`, not in a streamed patch.
   Switching locale/promo reuses the SKU price; recommendations stream every time.
+  These checks use synthetic SKU `DEMO-CACHE-007`, which maps to the build-warmed
+  trail shoe but must still fill its own cache entry on first visit.
 - Browser contracts: the Swedish cold shell commits under `instant()` and content
   streams after release. From `/product`, the real product-card link includes the
   warmed heading/price under lock, but recommendations wait for release. Viewport

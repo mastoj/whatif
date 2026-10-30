@@ -21,6 +21,12 @@ language switcher), then `Accept-Language`, then English.
 
 ## Price streaming demo
 
+Any `/product/<sku>` URL is valid. Known SKUs use their real catalog entry;
+unknown SKUs use a deterministic 32-bit hash modulo the catalog size to select
+product data. The displayed SKU and cache key keep the requested value, so
+`/product/demo-1`, `/product/demo-2`, etc. behave as separate products even when
+they map to the same underlying data.
+
 Product prices simulate a 10-second pricing service, cached with `cacheLife("max")`.
 On a cold visit, the static shell appears immediately, then product details and
 the price stream in. Later visits to that URL include those details and price in
@@ -58,6 +64,9 @@ so these checks cannot share one build. See `instant-nav.rig.md`.
 
 New builds, cache expiration, and eviction can make a price cold again. Development
 mode does not represent production shell caching.
+
+Run the catalog mapping unit tests with `node --test tests/products.test.mjs`
+(Node.js 22.18+ for native TypeScript imports).
 
 ## Adding components
 

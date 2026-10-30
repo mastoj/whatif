@@ -2,7 +2,6 @@ import { getPrecomputed } from "flags/next"
 import { cacheLife, navigation } from "next/cache"
 import type { Metadata } from "next"
 import Link from "next/link"
-import { notFound } from "next/navigation"
 import { langAndFlagCode } from "next/root-params"
 import { connection } from "next/server"
 import { getFormatter, getTranslations } from "next-intl/server"
@@ -43,7 +42,7 @@ async function getPriceWithLatency(sku: string) {
   cacheLife("max")
   // Cache the simulated service by SKU, not by locale or feature-flag variant.
   await new Promise((resolve) => setTimeout(resolve, 10_000))
-  return getProduct(sku)?.price
+  return getProduct(sku).price
 }
 
 // Cache Components needs one valid value; remaining SKUs render on first visit
@@ -54,7 +53,6 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { sku } = await params
   const product = getProduct(sku)
-  if (!product) return {}
   return {
     title: `${product.name} | ${product.brand}`,
     description: product.description,
@@ -68,7 +66,6 @@ async function Price({ product }: { product: Product }) {
     getPriceWithLatency(product.sku),
     getLocale(),
   ])
-  if (price === undefined) notFound()
   const format = await getFormatter({ locale })
   const t = await getTranslations({ locale, namespace: "Product" })
   const money = (value: number) =>
@@ -96,7 +93,6 @@ async function Price({ product }: { product: Product }) {
 async function ProductDetails({ params }: Pick<Props, "params">) {
   const { sku } = await params
   const product = await getProductWithLatency(sku)
-  if (!product) notFound()
   const locale = await getLocale()
   const t = await getTranslations({ locale, namespace: "Product" })
 

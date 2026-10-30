@@ -279,6 +279,17 @@ export const products: Product[] = [
   },
 ]
 
-export function getProduct(sku: string) {
-  return products.find((p) => p.sku === sku)
+function skuToInteger(sku: string) {
+  let hash = 0
+  for (let i = 0; i < sku.length; i++) {
+    hash = (Math.imul(hash, 31) + sku.charCodeAt(i)) >>> 0
+  }
+  return hash
+}
+
+export function getProduct(sku: string): Product {
+  const product = products.find((p) => p.sku === sku)
+  if (product) return product
+
+  return { ...products[skuToInteger(sku) % products.length], sku }
 }

@@ -62,7 +62,7 @@ test("cold Swedish product has an instant shell and streams its content", async 
   ).toHaveCount(3)
 })
 
-test("mobile product preserves promo, delivery, and missing-SKU behavior", async ({
+test("mobile product preserves flags and accepts synthetic SKUs", async ({
   page,
   context,
   baseURL,
@@ -82,7 +82,12 @@ test("mobile product preserves promo, delivery, and missing-SKU behavior", async
   ).toBeVisible()
   await expect(page.getByText(/Beställ inom/)).toBeVisible()
   await page.goto("/product/not-a-real-sku")
-  await expect(page.getByText("This page could not be found.")).toBeVisible()
+  await expect(
+    page.getByText("SKU: not-a-real-sku", { exact: true })
+  ).toBeVisible()
+  await expect(page.getByTestId("product-price")).toBeVisible({
+    timeout: 20_000,
+  })
 })
 
 test("a catalog link shows the warmed product in its instant shell", async ({

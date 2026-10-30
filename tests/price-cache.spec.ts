@@ -3,7 +3,7 @@ import { test } from "@playwright/test"
 
 async function readProduct(baseURL: string, locale: string, promo: boolean) {
   const start = performance.now()
-  const response = await fetch(`${baseURL}/product/BPK-DAY-003`, {
+  const response = await fetch(`${baseURL}/product/DEMO-CACHE-007`, {
     headers: {
       "Accept-Language": locale,
       Cookie: `show-promo-banner=${promo ? "1" : "0"}`,
@@ -36,7 +36,7 @@ async function readProduct(baseURL: string, locale: string, promo: boolean) {
   return { html, shellAt, priceAt, recommendationsAt }
 }
 
-// First SKU lookup is cold; later locale/flag variants share its cached data.
+// A synthetic SKU is cold even if its underlying catalog product was prerendered.
 for (const locale of ["en", "sv", "no"]) {
   for (const promo of [false, true]) {
     test(`${locale}, promo=${promo}: immediate shell upgrades after a visit`, async ({
