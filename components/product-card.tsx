@@ -8,17 +8,19 @@ export async function ProductCard({
   product,
   locale,
   className,
+  prefetch = true,
 }: {
   product: Product
   locale: string
   className?: string
+  prefetch?: boolean
 }) {
   const format = await getFormatter({ locale })
 
   return (
     <Link
       href={`/product/${product.sku}`}
-      prefetch={true}
+      prefetch={prefetch}
       className={cn(
         "flex flex-col gap-1 rounded-lg border p-4 hover:bg-muted",
         className

@@ -1,6 +1,36 @@
 import { expect, test } from "@playwright/test"
 import { instant } from "@next/playwright"
 
+test("home does not prefetch product cards", async ({ page }) => {
+  const productRequests: string[] = []
+  page.on("request", (request) => {
+    if (new URL(request.url()).pathname.startsWith("/product/")) {
+      productRequests.push(request.url())
+    }
+  })
+  await page.goto("/")
+  await expect(page.locator('a[href^="/product/"]')).toHaveCount(10)
+  await page.waitForLoadState("networkidle")
+  expect(productRequests).toEqual([])
+})
+
+test("home2 shows the same home UI and prefetches product cards", async ({
+  page,
+}) => {
+  const productRequests: string[] = []
+  page.on("request", (request) => {
+    if (new URL(request.url()).pathname.startsWith("/product/")) {
+      productRequests.push(request.url())
+    }
+  })
+  await page.goto("/home2")
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+    "Projektet är klart!"
+  )
+  await expect(page.locator('a[href^="/product/"]')).toHaveCount(10)
+  await expect.poll(() => productRequests.length).toBeGreaterThan(0)
+})
+
 test.use({
   locale: "sv-SE",
 })

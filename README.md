@@ -13,7 +13,7 @@ For Vercel deployments, add `FLAGS_SECRET` in the project's Settings >
 Environment Variables for Production and Preview (if used), then redeploy. Keep
 the same value for builds and runtime; `.env.local` is only for local development.
 
-The public URLs are `/`, `/sample-page`, `/product` and `/product/<sku>`. The
+The public URLs are `/`, `/home2`, `/sample-page`, `/product` and `/product/<sku>`. The
 proxy rewrites them internally to `/<lang>-<flagCode>/...`; links and
 `router.push` should use public URLs. Supported locales are `en`, `sv` and `no`
 (see `i18n/locales.ts`). The proxy picks the `NEXT_LOCALE` cookie (set by the
@@ -29,13 +29,20 @@ cache; recommendations and delivery estimates remain request-time content.
 
 All supported locale/promo root variants are prerendered, allowing nested SKU
 shells to upgrade after a visit. Price lookup is cached by SKU, so switching
-locale or promo flags does not repeat the pricing delay. Product cards opt into
-URL-specific prefetching: visible cards can warm products before the click,
-while recommendations and other request-time work wait until navigation.
+locale or promo flags does not repeat the pricing delay. The two home pages share
+the same UI: `/` disables product-card prefetching, while `/home2` enables it.
+Catalogue and recommendation cards also enable URL-specific prefetching. Visible
+prefetch-enabled cards can warm products before the click, while recommendations
+and other request-time work wait until navigation.
 
 `TRL-RUN-001` is prerendered at build time. To see a cold price, directly open
 `/product/JKT-SHL-002` after a fresh production build, before browsing the catalog
 (which can prefetch it). Use the same `FLAGS_SECRET` for build and runtime.
+
+Prefetching requires JavaScript. Disabling it does not clear server caches and also
+prevents React's streamed Suspense patches from revealing content normally. Keep
+JavaScript enabled when comparing `/` and `/home2`; use a fresh build and an
+unvisited SKU to observe a cold price. Both pages share the same server caches.
 
 Run the production regression tests:
 
